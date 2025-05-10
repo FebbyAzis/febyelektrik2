@@ -47,7 +47,7 @@ class FakturController extends Controller
         $save->nama_barang = $request->nama_barang;
         $save->harga_barang = $request->harga_barang;
         $save->harga_grosir = $request->harga_grosir;
-        $save->ongkos_toko = str_replace('.','',$request->ongkos_toko);
+        $save->ongkos_toko = $request->ongkos_toko;
         $save->disc = $request->disc; 
         $save->jumlah = $request->jumlah; 
         $save->save(); 

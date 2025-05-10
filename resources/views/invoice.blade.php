@@ -81,7 +81,7 @@
                                 <th class="text-center">Jumlah</th>
                                 <th class="text-center">Nama Barang</th>
                                 <th class="text-center">Harga Barang</th>
-                                <th class="text-center">Harga Grosir</th>
+                                <th class="text-center">Harga Jual</th>
                                 <th class="text-center">Disc</th>
                                 <th class="text-center">Potongan</th>
                                 <th class="text-center">Ongkos Toko</th>
@@ -117,9 +117,10 @@
                                     <td class="text-center">{{ $p->nama_barang }}</td>
                                     
 
-                                    <td class="text-right">Rp.
+                                 
+                                    <td class="text-right">Rp. 
                                         {{ number_format($p->harga_barang, 0, ',', '.') }}</td>
-
+                                    </td>
                                     <td class="text-right">Rp. 
                                         {{ number_format($p->harga_grosir, 0, ',', '.') }}</td>
                                     </td>
@@ -222,7 +223,8 @@
                                     required>
                                     <option value="">-- Pilih Barang --</option>
                                     @foreach ($barang as $b)
-                                        <option value="{{ $b->id }}" data-harga_barang="{{ $b->harga_barang }}"
+                                        <option value="{{ $b->id }}"
+                                             data-harga_barang="{{ $b->harga_barang }}"
                                             data-nama_barang="{{ $b->nama_barang }}" data-qty="{{ $b->qty }}"
                                             data-isi="{{ $b->isi }}" data-grosir_1="{{ $b->grosir_1 }}"
                                             data-grosir_2="{{ $b->grosir_2 }}" data-grosir_3="{{ $b->grosir_3 }}"
@@ -270,19 +272,19 @@
 
                             <h5>--Pilih Harga Grosir--</h5>
                             <div class="form-check">
-                                <label><input type="radio" class="form-check-input" id="grosir_1" name="harga_grosir" value=""> Grosir 1</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_1" name="harga_grosir" value="" required> Grosir 1</label>
                                 <input type="text" name="" id="g_1" readonly>
                             </div>
 
                             <div class="form-check">
 
-                                <label><input type="radio" class="form-check-input" id="grosir_2" name="harga_grosir" value=""> Grosir 2</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_2" name="harga_grosir" value="" required> Grosir 2</label>
                                 <input type="text" name="" id="g_2" readonly>
                             </div>
 
                             <div class="form-check mb-3">
 
-                                <label><input type="radio" class="form-check-input" id="grosir_3" name="harga_grosir" value=""> Grosir 3</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_3" name="harga_grosir" value="" required> Grosir 3</label>
                                 <input type="text" name="" id="g_3" readonly>
                             </div>
 
@@ -533,7 +535,7 @@
                 }
 
                 if (harga_barang) {
-                    $('#harga_barang').val(harga_barang); // Mengisi harga berdasarkan produk yang dipilih
+                    $('#harga_barang').val(harga_barang); // Mengharga_barang harga berdasarkan produk yang dipilih
                 } else {
                     $('#harga_barang').val(''); // Kosongkan harga jika tidak ada barang yang dipilih
                 }
@@ -550,7 +552,7 @@
                     $('#g_2').val(''); // Kosongkan harga jika tidak ada barang yang dipilih
                 }
 
-                if (harga_barang) {
+                if (g_3) {
                     $('#g_3').val(g_3); // Mengisi harga berdasarkan produk yang dipilih
                 } else {
                     $('#g_3').val(''); // Kosongkan harga jika tidak ada barang yang dipilih

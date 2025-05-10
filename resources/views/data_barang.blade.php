@@ -55,7 +55,7 @@
                                 <th class="text-secondary" rowspan="2">Aksi</th>
                             </tr>
                             <tr>
-                              <th class="text-secondary">Harga Umum</th>
+                              <th class="text-secondary">Harga Pokok</th>
                               <th class="text-secondary">Grosir 1</th>
                               <th class="text-secondary">Grosir 2</th>
                               <th class="text-secondary">Grosir 3</th>
@@ -116,7 +116,7 @@
             <div class="form-group">
                 <label for="exampleFormControlInput1">Kode Barang</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Masukan kode barang" 
-                name="kode_barang" required>
+                name="kode_barang">
               </div>
               <div class="form-group">
                 <label for="exampleFormControlInput1">Kategori Barang</label><br>
@@ -210,27 +210,27 @@
 
 <hr>
 <h3>Harga Barang</h3>
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Harga Umum</label>
-                <input type="text" class="form-control" id="harga_barang" placeholder="Masukan harga barang"
-                name="harga_barang" required>
-              </div>
+             
+<div class="form-group">
+  <label for="exampleFormControlInput1">Harga Pokok</label>
+  <input type="text" class="form-control" id="harga_barang" placeholder="Masukan harga pokok"
+  name="harga_barang" required>
+</div>
 
               <div class="form-group">
                 <label for="exampleFormControlInput1">Harga Grosir 1</label>
-                <input type="text" class="form-control" id="grosir_1" placeholder="Masukan harga barang"
+                <input type="text" class="form-control" id="grosir_1" placeholder="Masukan harga grosir 1"
                 name="grosir_1" required>
               </div>
 
               <div class="form-group">
                 <label for="exampleFormControlInput1">Harga Grosir 2</label>
-                <input type="text" class="form-control" id="grosir_2" placeholder="Masukan harga barang"
-                name="grosir_2" required>
+                <input type="text" class="form-control" id="grosir_2" placeholder="Masukan harga grosir 2">
               </div>
 
               <div class="form-group">
                 <label for="exampleFormControlInput1">Harga Grosir 3</label>
-                <input type="text" class="form-control" id="grosir_3" placeholder="Masukan harga barang"
+                <input type="text" class="form-control" id="grosir_3" placeholder="Masukan harga grosir 3"
                 name="grosir_3" required>
               </div>
               
@@ -263,7 +263,7 @@
           <div class="form-group">
               <label for="exampleFormControlInput1">Kode Barang</label>
               <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Masukan kode barang" 
-              name="kode_barang" value="{{$item->kode_barang}}" required>
+              name="kode_barang" value="{{$item->kode_barang}}">
             </div>
             <div class="form-group">
               <label for="exampleFormControlInput1">Kategori Barang</label><br>
@@ -443,11 +443,12 @@
 
             <hr>
 <h3>Harga Barang</h3>
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Harga Umum</label>
-                <input type="text" class="form-control" id="harga_barang_edit" placeholder="Masukan harga barang"
-                name="harga_barang" value="{{$item->harga_barang}}" required>
-              </div>
+              
+<div class="form-group">
+  <label for="exampleFormControlInput1">Harga Pokok</label>
+  <input type="text" class="form-control" id="harga_barang_edit" placeholder="Masukan harga pokok"
+  name="harga_barang" value="{{$item->harga_barang}}" required>
+</div>
 
               <div class="form-group">
                 <label for="exampleFormControlInput1">Harga Grosir 1</label>
@@ -507,7 +508,8 @@
 @section('js')
 
 <script type="text/javascript">
-    var harga_barang = document.getElementById('harga_barang');
+  
+  var harga_barang = document.getElementById('harga_barang');
     harga_barang.addEventListener('keyup', function(e)
     {
         harga_barang.value = formatRupiah(this.value, 'Rp. ');

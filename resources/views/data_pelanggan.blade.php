@@ -106,7 +106,7 @@
               <div class="form-group">
                 <label for="exampleFormControlInput1">No Telepon</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Masukan no telepon"
-                name="no_tlp" required>
+                name="no_tlp">
               </div>
               <div class="form-group">
                 <label for="exampleFormControlInput1">Alamat</label>
@@ -146,7 +146,7 @@
               <div class="form-group">
                 <label for="exampleFormControlInput1">No Telepon</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Masukan nama barang"
-                name="no_tlp" value="{{$item->no_tlp}}" required>
+                name="no_tlp" value="{{$item->no_tlp}}">
               </div>
               <div class="form-group">
                 <label for="exampleFormControlInput1">Alamat</label>
