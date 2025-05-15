@@ -21,8 +21,18 @@ class Faktur extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    public function piutang(): HasMany
+    {
+        return $this->hasMany(Piutang::class);
+    }
+
     public function data_pelanggan(): BelongsTo
     {
         return $this->belongsTo(DataPelanggan::class);
     }
+
+    // public function totalHargaBarang()
+    // {
+    //     return $this->invoice()->sum('harga_grosir');
+    // }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DataPelanggan;
+use App\Models\Invoice;
 
 class DataPelangganController extends Controller
 {
@@ -43,4 +44,6 @@ class DataPelangganController extends Controller
         $db = DataPelanggan::where('id', $id)->delete();
         return redirect()->back()->with('Successss', 'Data berhasil dihapus!');
     }
+
+    
 }

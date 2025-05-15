@@ -566,6 +566,3 @@
         return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
     }
     </script>
-  
-  
-@endsection

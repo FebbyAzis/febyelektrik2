@@ -34,9 +34,26 @@ class FakturController extends Controller
         $save->data_pelanggan_id = $request->data_pelanggan_id;
         $save->no_faktur = $request->no_faktur; 
         $save->tanggal = $request->tanggal; 
+        $save->jenis_tr = $request->jenis_tr; 
+        $save->jth_tempo = $request->jth_tempo; 
         
         $save->save(); 
         return redirect()->back()->with('Success', 'Data berhasil ditambahkan!');
+    }
+
+    public function edit_faktur(Request $request, $id)
+    {
+
+        Faktur::where('id', $id)->update([
+            
+            'no_faktur' => $request->no_faktur,
+            'tanggal' => $request->tanggal,
+            'jenis_tr' => $request->jenis_tr,
+            'jth_tempo' => $request->jth_tempo,
+           
+        ]);
+
+        return redirect()->back()->with('Successs', 'Data berhasil diubah');
     }
 
     public function tambah_invoice(Request $request)
@@ -49,7 +66,8 @@ class FakturController extends Controller
         $save->harga_grosir = $request->harga_grosir;
         $save->ongkos_toko = $request->ongkos_toko;
         $save->disc = $request->disc; 
-        $save->jumlah = $request->jumlah; 
+        $save->jumlah = $request->jumlah;
+        $save->jenis_tr = $request->jenis_tr; 
         $save->save(); 
         return redirect()->back()->with('Success', 'Data berhasil ditambahkan!');
     }

@@ -189,20 +189,56 @@ hr {
     <header>
         
         <div class="row">
+            
             <div class="col-sm-12 text-left pl-2">
-                <h1>FAKTUR PENJUALAN</h1>
-            </div>
-            <div class="col-sm-12 text-left pl-2">
-                <p>Nama Pelanggan : {{$faktur->data_pelanggan->nama_pelanggan}}</p>
-                <p>No Faktur &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 
-                    {{$faktur->no_faktur}}
-                </p>
-                <p>Tanggal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;: 
-                    {{date("d/M/Y", strtotime($faktur->tanggal));}}</p>
-                <p>Alamat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;: 
-                    {{$faktur->data_pelanggan->alamat}}</p>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h1>FAKTUR PENJUALAN</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <table>
+                            <tr>
+                                <td>Pelanggan</td>
+                                <td>&nbsp;:&nbsp;</td>
+                                <td>{{$faktur->data_pelanggan->nama_pelanggan}}</td>
+                            </tr>
+                            <tr>
+                                <td>No Faktur</td>
+                                <td>&nbsp;:&nbsp;</td>
+                                <td>{{$faktur->no_faktur}}</td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal</td>
+                                <td>&nbsp;:&nbsp;</td>
+                                <td>{{date("d/M/Y", strtotime($faktur->tanggal));}}</td>
+                            </tr>
+                            <tr>
+                                <td>Jenis Transaksi</td>
+                                <td>&nbsp;:&nbsp;</td>
+                                <td>@if ($faktur->jenis_tr == 'Grosir 1')
+                                    Grosir 1 (Umum)
+                                @elseif ($faktur->jenis_tr == 'Grosir 2')
+                                    Grosir 2 (Bon)
+                                @elseif ($faktur->jenis_tr == 'Grosir 3')
+                                    Grosir 3 (Tunai)
+                                @else
+                                    -
+                                @endif</td>
+                            </tr>
+                            @if ($faktur->jth_tempo == null)
+                        
+                            @else
+                            <tr>
+                                <td>Jatuh Tempo</td>
+                                <td>&nbsp;:&nbsp;</td>
+                                <td>{{date("d/M/Y", strtotime($faktur->jth_tempo));}}</td>
+                            </tr>
+                               
+                    @endif
+                        </table>
+                    </div>
+                </div>
+             
             </div>
            
            
@@ -233,9 +269,10 @@ hr {
                         <tbody>
                             @foreach ($invoice as $no=>$p)
                     @php
-                       $y = $p->harga_grosir * $p->jumlah + $p->ongkos_toko;
-                                
-                                $t = (($p->harga_grosir * $p->jumlah) * $p->disc) / 100;
+                        $o = $p->ongkos_toko * $p->jumlah;
+                       $y = $p->harga_grosir * $p->jumlah + $o;
+                                $h = $p->harga_grosir + $p->ongkos_toko;
+                                $t = ($y * $p->disc) / 100;
                                 $ya = $y - $t;
                                 $pp += $ya;
                     @endphp
@@ -246,7 +283,7 @@ hr {
                     <td class="text-center">{{$p->data_barang->isi}}</td>
                     <td class="text-center">{{$p->jumlah}}</td>
                     <td class="text-left">{{$p->nama_barang}}</td>
-                    <td class="text-right">Rp. {{ number_format($p->harga_grosir ,0, ',', '.') }}</td>
+                    <td class="text-right">Rp. {{ number_format($h ,0, ',', '.') }}</td>
                     
                                   
                     

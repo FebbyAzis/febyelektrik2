@@ -40,37 +40,76 @@
         @endif
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Tabel Invoice</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Detail Faktur</h6>
             </div>
             <div class="card-body">
+
                 <div class="row">
                     <div class="col-md-3">
                         <p>No Faktur</p>
                         <p>Nama Pelanggan/Toko</p>
                         <p>Alamat</p>
+                        <p>Tanggal</p>
+                        <p>Jenis Transaksi</p>
+                        @if ($faktur->jth_tempo == null)
+                        @else
+                            <p>Jatuh Tempo</p>
+                        @endif
                     </div>
                     <div class="col-md-1 text-end">
                         <p>:</p>
                         <p>:</p>
                         <p>:</p>
+                        <p>:</p>
+                        <p>:</p>
+                        @if ($faktur->jth_tempo == null)
+                        @else
+                            <p>:</p>
+                        @endif
                     </div>
                     <div class="col-md-8">
                         <p>{{ $faktur->no_faktur }}</p>
                         <p>{{ $faktur->data_pelanggan->nama_pelanggan }}</p>
                         <p>{{ $faktur->data_pelanggan->alamat }}</p>
+                        <p>{{ date('d/M/Y', strtotime($faktur->tanggal)) }}</p>
+                        @if ($faktur->jenis_tr == 'Grosir 1')
+                            <p>Grosir 1 (Umum)</p>
+                        @elseif ($faktur->jenis_tr == 'Grosir 2')
+                            <p>Grosir 2 (Bon)</p>
+                        @elseif ($faktur->jenis_tr == 'Grosir 3')
+                            <p>Grosir 3 (Tunai)</p>
+                        @else
+                            <p>-</p>
+                        @endif
+
+                        @if ($faktur->jth_tempo == null)
+
+                        @else
+                            <p>{{ date('d/M/Y', strtotime($faktur->jth_tempo)) }}</p>
+                        @endif
+
+
+                        <div class="col-md-12 text-right py-3">
+                            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                data-toggle="modal" data-target="#exampleModal"><i
+                                    class="fas fa-plus fa-sm text-white-50"></i>&nbsp;
+                                Tambah Barang
+                            </button> &nbsp;
+                            <a href="{{ url('cetak-invoice/' . $faktur->id) }}" class="btn btn-sm btn-primary"
+                                target="_blank"><i class="fas fa-download fa-sm text-white-50">
+                                    &nbsp;</i> PRINT OUT</a>
+                        </div>
                     </div>
-                    <div class="col-md-12 text-right py-3">
-                        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                            data-toggle="modal" data-target="#exampleModal"><i
-                                class="fas fa-plus fa-sm text-white-50"></i>&nbsp;
-                            Tambah Barang
-                        </button> &nbsp;
-                        <a href="{{ url('cetak-invoice/' . $faktur->id) }}" class="btn btn-sm btn-primary"
-                            target="_blank"><i class="fas fa-download fa-sm text-white-50">
-                                &nbsp;</i> PRINT OUT</a>
-                    </div>
+
                 </div>
-                <hr class="sidebar-divider">
+            </div>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Tabel Invoice</h6>
+            </div>
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable">
                         <thead>
@@ -90,19 +129,19 @@
                             </tr>
                         </thead>
                         @php
-
+        
                         @endphp
                         <tbody>
                             @foreach ($invoice as $no => $p)
-                           
-                            @php
-                            $y = $p->harga_grosir * $p->jumlah + $p->ongkos_toko;
-                                
-                                $t = (($p->harga_grosir * $p->jumlah) * $p->disc) / 100;
-                                $ya = $y - $t;
-                                $pp += $ya;
-                        @endphp
-                        
+                                @php
+                                    $o = $p->ongkos_toko * $p->jumlah;
+                                    $y = $p->harga_grosir * $p->jumlah + $o;
+        
+                                    $t = ($y * $p->disc) / 100;
+                                    $ya = $y - $t;
+                                    $pp += $ya;
+                                @endphp
+        
                                 <tr>
                                     <td class="text-center">{{ $no + 1 }}</td>
                                     <td class="text-center">{{ $p->data_barang->qty }}</td>
@@ -110,49 +149,45 @@
                                         @if ($p->data_barang->isi == null)
                                             -
                                         @else
-                                        {{ $p->data_barang->isi }}
+                                            {{ $p->data_barang->isi }}
                                         @endif
-                                       </td>
+                                    </td>
                                     <td class="text-center">{{ $p->jumlah }}</td>
                                     <td class="text-center">{{ $p->nama_barang }}</td>
-                                    
-
-                                 
-                                    <td class="text-right">Rp. 
+        
+        
+        
+                                    <td class="text-right">Rp.
                                         {{ number_format($p->harga_barang, 0, ',', '.') }}</td>
                                     </td>
-                                    <td class="text-right">Rp. 
+                                    <td class="text-right">Rp.
                                         {{ number_format($p->harga_grosir, 0, ',', '.') }}</td>
                                     </td>
-
-                                  
+        
+        
                                     <td class="text-left">
                                         @if ($p->disc == null)
-                                            
                                         @else
-                                        {{$p->disc}}%    
+                                            {{ $p->disc }}%
                                         @endif
-                                        </td>
+                                    </td>
                                     <td class="text-right">
                                         @if ($t == 0)
-                                            
                                         @else
-                                        Rp. {{ number_format($t, 0, ',', '.') }}    
+                                            Rp. {{ number_format($t, 0, ',', '.') }}
                                         @endif
-                                        </td>
-                                    <td class="text-right">Rp. {{ number_format($p->ongkos_toko, 0, ',', '.') }}</td>
-                                    
-                                    <td class="text-right">Rp. {{ number_format($ya , 0, ',', '.') }}</td>
-
-
+                                    </td>
+                                    <td class="text-right">Rp. {{ number_format($o, 0, ',', '.') }}</td>
+        
+                                    <td class="text-right">Rp. {{ number_format($ya, 0, ',', '.') }}</td>
+        
+        
                                     <td class="text-center">
-                                        <button type="button"
-                                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                                        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                                             data-toggle="modal" data-target="#exampleModal1{{ $p->id }}">
                                             Edit
                                         </button>
-                                        <button type="button"
-                                            class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
+                                        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"
                                             data-toggle="modal" data-target="#exampleModal2{{ $p->id }}">
                                             Hapus
                                         </button>
@@ -163,9 +198,9 @@
                         <tfoot>
                             <tr>
                                 <th colspan="10" class="text-center">Total</th>
-                              
-                                <th class="text-right">Rp. {{ number_format($pp , 0, ',', '.') }}</th>
-
+        
+                                <th class="text-right">Rp. {{ number_format($pp, 0, ',', '.') }}</th>
+        
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -174,11 +209,13 @@
             </div>
         </div>
 
-        <!-- Content Row -->
-
-
-
     </div>
+
+    <!-- Content Row -->
+
+
+
+    
     <!-- /.container-fluid -->
 
 
@@ -191,7 +228,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Faktur</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Barang</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -200,6 +237,7 @@
 
                         <div class="col-md-12">
                             <input type="hidden" name="faktur_id" value="{{ $faktur->id }}">
+                            <input type="hidden" name="jenis_tr" value="{{ $faktur->jenis_tr }}">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -223,13 +261,12 @@
                                     required>
                                     <option value="">-- Pilih Barang --</option>
                                     @foreach ($barang as $b)
-                                        <option value="{{ $b->id }}"
-                                             data-harga_barang="{{ $b->harga_barang }}"
+                                        <option value="{{ $b->id }}" data-harga_barang="{{ $b->harga_barang }}"
                                             data-nama_barang="{{ $b->nama_barang }}" data-qty="{{ $b->qty }}"
                                             data-isi="{{ $b->isi }}" data-grosir_1="{{ $b->grosir_1 }}"
                                             data-grosir_2="{{ $b->grosir_2 }}" data-grosir_3="{{ $b->grosir_3 }}"
-                                            data-g_1="{{ $b->grosir_1 }}"
-                                            data-g_2="{{ $b->grosir_2 }}" data-g_3="{{ $b->grosir_3 }}">
+                                            data-g_1="{{ $b->grosir_1 }}" data-g_2="{{ $b->grosir_2 }}"
+                                            data-g_3="{{ $b->grosir_3 }}">
                                             {{ $b->nama_barang }} -
                                             Rp.{{ number_format($b->harga_barang, 0, ',', '.') }}/{{ $b->qty }}
                                         </option>
@@ -243,22 +280,22 @@
                                     placeholder="..." readonly>
                             </div>
 
-                           <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="qty">QTY</label>
-                                    <input type="text" class="form-control" id="qty" name="qty"
-                                        placeholder="..." readonly>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="qty">QTY</label>
+                                        <input type="text" class="form-control" id="qty" name="qty"
+                                            placeholder="..." readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="isi">Isi</label>
+                                        <input type="text" class="form-control" id="isi" name="isi"
+                                            placeholder="..." readonly>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="isi">Isi</label>
-                                    <input type="text" class="form-control" id="isi" name="isi"
-                                        placeholder="..." readonly>
-                                </div>
-                            </div>
-                           </div>
 
                             <h4>Harga Barang</h4>
                             <hr>
@@ -272,19 +309,22 @@
 
                             <h5>--Pilih Harga Grosir--</h5>
                             <div class="form-check">
-                                <label><input type="radio" class="form-check-input" id="grosir_1" name="harga_grosir" value="" required> Grosir 1</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_1" name="harga_grosir"
+                                        value="" required> Grosir 1</label>
                                 <input type="text" name="" id="g_1" readonly>
                             </div>
 
                             <div class="form-check">
 
-                                <label><input type="radio" class="form-check-input" id="grosir_2" name="harga_grosir" value="" required> Grosir 2</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_2" name="harga_grosir"
+                                        value="" required> Grosir 2</label>
                                 <input type="text" name="" id="g_2" readonly>
                             </div>
 
                             <div class="form-check mb-3">
 
-                                <label><input type="radio" class="form-check-input" id="grosir_3" name="harga_grosir" value="" required> Grosir 3</label>
+                                <label><input type="radio" class="form-check-input" id="grosir_3" name="harga_grosir"
+                                        value="" required> Grosir 3</label>
                                 <input type="text" name="" id="g_3" readonly>
                             </div>
 
@@ -375,81 +415,93 @@
                                 </div> --}}
                                 <div class="form-group">
                                     <label class="form-label" for="nama_barang">Nama Barang</label>
-                                    <input type="text" class="form-control" value="{{$item->nama_barang}}"
+                                    <input type="text" class="form-control" value="{{ $item->nama_barang }}"
                                         placeholder="..." readonly>
                                 </div>
-    
-                               <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="form-label" for="qty">QTY</label>
-                                        <input type="text" class="form-control" value="{{$item->data_barang->qty}}"
-                                            placeholder="..." readonly>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="qty">QTY</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $item->data_barang->qty }}" placeholder="..." readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="isi">Isi</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $item->data_barang->isi }}" placeholder="..." readonly>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="form-label" for="isi">Isi</label>
-                                        <input type="text" class="form-control" value="{{$item->data_barang->isi}}"
-                                            placeholder="..." readonly>
-                                    </div>
-                                </div>
-                               </div>
-    
+
                                 <h4>Harga Barang</h4>
                                 <hr>
-    
-    
+
+
                                 <div class="form-group">
                                     <label class="form-label" for="harga_beli">Harga Umum</label>
-                                    <input type="text" class="form-control" value="{{$item->harga_barang}}"
+                                    <input type="text" class="form-control" value="{{ $item->harga_barang }}"
                                         placeholder="..." readonly>
                                 </div>
-    
+
                                 <h5>--Pilih Harga Grosir--</h5>
                                 <div class="form-check">
                                     @if ($item->harga_grosir == $item->data_barang->grosir_1)
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_1}}" checked> Rp. {{ number_format($item->data_barang->grosir_1, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_1 }}" checked> Rp.
+                                            {{ number_format($item->data_barang->grosir_1, 0, ',', '.') }}</label>
                                     @else
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_1}}"> Rp. {{ number_format($item->data_barang->grosir_1, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_1 }}"> Rp.
+                                            {{ number_format($item->data_barang->grosir_1, 0, ',', '.') }}</label>
                                     @endif
                                 </div>
-    
+
                                 <div class="form-check">
                                     @if ($item->harga_grosir == $item->data_barang->grosir_2)
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_2}}" checked> Rp. {{ number_format($item->data_barang->grosir_2, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_2 }}" checked> Rp.
+                                            {{ number_format($item->data_barang->grosir_2, 0, ',', '.') }}</label>
                                     @else
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_2}}"> Rp. {{ number_format($item->data_barang->grosir_2, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_2 }}"> Rp.
+                                            {{ number_format($item->data_barang->grosir_2, 0, ',', '.') }}</label>
                                     @endif
-                                </div>      
-                                
+                                </div>
+
                                 <div class="form-check">
                                     @if ($item->harga_grosir == $item->data_barang->grosir_3)
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_3}}" checked> Rp. {{ number_format($item->data_barang->grosir_3, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_3 }}" checked> Rp.
+                                            {{ number_format($item->data_barang->grosir_3, 0, ',', '.') }}</label>
                                     @else
-                                    <label><input type="radio" class="form-check-input" name="harga_grosir" value="{{$item->data_barang->grosir_3}}"> Rp. {{ number_format($item->data_barang->grosir_3, 0, ',', '.') }}</label>
+                                        <label><input type="radio" class="form-check-input" name="harga_grosir"
+                                                value="{{ $item->data_barang->grosir_3 }}"> Rp.
+                                            {{ number_format($item->data_barang->grosir_3, 0, ',', '.') }}</label>
                                     @endif
                                 </div>
-    
+
                                 <div class="form-group">
                                     <label class="form-label" for="exampleInputText1">Jumlah</label>
-                                    <input type="text" class="form-control" id="exampleInputText1" name="jumlah" value="{{$item->jumlah}}"
-                                        placeholder="..." required>
+                                    <input type="text" class="form-control" id="exampleInputText1" name="jumlah"
+                                        value="{{ $item->jumlah }}" placeholder="..." required>
                                 </div>
-    
+
                                 <div class="form-group">
                                     <label class="form-label" for="exampleInputText1">Ongkos Toko</label>
-                                    <input type="text" class="form-control" id="exampleInputText1" name="ongkos_toko" value="{{$item->ongkos_toko}}"
-                                        placeholder="Masukan nominal ongkos toko">
+                                    <input type="text" class="form-control" id="exampleInputText1" name="ongkos_toko"
+                                        value="{{ $item->ongkos_toko }}" placeholder="Masukan nominal ongkos toko">
                                 </div>
-    
+
                                 <div class="form-group">
                                     <label class="form-label" for="exampleInputText1">Diskon (%)</label>
                                     <input type="text" class="form-control" id="exampleInputText1" name="disc"
                                         placeholder="...">
                                 </div>
-    
-    
+
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
@@ -535,7 +587,8 @@
                 }
 
                 if (harga_barang) {
-                    $('#harga_barang').val(harga_barang); // Mengharga_barang harga berdasarkan produk yang dipilih
+                    $('#harga_barang').val(
+                    harga_barang); // Mengharga_barang harga berdasarkan produk yang dipilih
                 } else {
                     $('#harga_barang').val(''); // Kosongkan harga jika tidak ada barang yang dipilih
                 }
@@ -559,22 +612,23 @@
                 }
 
                 if (grosir_1) {
-    $('#grosir_1').attr('value', grosir_1);
-} else {
-    $('#grosir_1').attr('value', '');
-}
+                    $('#grosir_1').attr('value', grosir_1);
+                } else {
+                    $('#grosir_1').attr('value', '');
+                }
 
-if (grosir_2) {
-    $('#grosir_2').attr('value', grosir_2);
-} else {
-    $('#grosir_2').attr('value', '');
-}
+                if (grosir_2) {
+                    $('#grosir_2').attr('value', grosir_2);
+                } else {
+                    $('#grosir_2').attr('value', '');
+                }
 
-if (grosir_3) {
-    $('#grosir_3').attr('value', grosir_3);
-} else {
-    $('#grosir_3').attr('value', '');
-}
+                if (grosir_3) {
+                    $('#grosir_3').attr('value', grosir_3);
+                } else {
+                    $('#grosir_3').attr('value', '');
+                }
+
                 function formatRupiah(angka, prefix) {
                     var number_string = angka.replace(/[^,\d]/g, '').toString(),
                         split = number_string.split(','),

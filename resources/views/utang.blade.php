@@ -5,12 +5,12 @@
     <!-- Page Heading -->
     <div class="row">
         <div class="col-sm-9">
-            <h1 class="h3 mb-2 text-gray-800">Faktur</h1>
-    <p class="mb-4">Anda dapat membuat faktur pada halaman ini.</p>
+            <h1 class="h3 mb-2 text-gray-800">Utang</h1>
+    <p class="mb-4">Anda dapat mengelola utang pada halaman ini.</p>
         </div>
         <div class="col-sm-3 mt-2 text-right">
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#exampleModal"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Buat Faktur</a>
+                class="fas fa-plus fa-sm text-white-50"></i> Buat Utang Baru</a>
         </div>
     </div>
 
@@ -42,8 +42,8 @@
     <!-- DataTales Example -->
     
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Data Faktur</h6>
+        <div class="card-header py-3 bg-warning">
+            <h6 class="m-0 font-weight-bold text-dark">Utang Aktif/Belum Lunas</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -51,42 +51,39 @@
                     <thead>
                         <tr>
                             <th class="text-secondary text-center">No</th>
-                            <th class="text-secondary text-center">No Faktur</th>
-                            <th class="text-secondary text-center">Nama Pelanggan</th>
-                            <th class="text-secondary text-center">Tanggal</th>
-                            <th class="text-secondary text-center">Jenis Transaksi</th>
+                            <th class="text-secondary text-center">Toko/Pihak Penghutang</th>
+                            <th class="text-secondary text-center">Tanggal Utang</th>
+                            <th class="text-secondary text-center">Nominal Utang</th>
+                            <th class="text-secondary text-center">Keterangan</th>
                             <th class="text-secondary text-center">Tanggal Jatuh Tempo</th>
+                            <th class="text-secondary text-center">Status</th>
                             <th class="text-secondary text-center">Aksi</th>
                         </tr>
                     </thead>
                   
                     <tbody>
-                        @foreach ($f as $no=>$item)
+                        @foreach ($uta as $no=>$item)
                             <tr>
                                 <td class="text-secondary">{{$no+1}}</td>
-                                <td class="text-secondary">{{$item->no_faktur}}</td>
-                                <td class="text-secondary">{{$item->data_pelanggan->nama_pelanggan}}</td>
+                                <td class="text-secondary">{{$item->toko}}</td>
                                 <td class="text-secondary">{{date("d/M/Y", strtotime($item->tanggal));}}</td>
-                                @if ($item->jenis_tr == 'Grosir 1')
-                                <td class="text-secondary">Grosir 1 (Umum)</td>
-                                @elseif ($item->jenis_tr == 'Grosir 2')
-                                <td class="text-secondary">Grosir 2 (Bon)</td>
-                                @elseif ($item->jenis_tr == 'Grosir 3')
-                                <td class="text-secondary">Grosir 3 (Tunai)</td>
-                                @else
-                                <td>-</td>
-                                @endif
-
+                                <td class="text-secondary text-right">Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</td>
+                                <td class="text-secondary">{{$item->keterangan}}</td>
                                 @if ($item->jth_tempo == null)
                                 <td class="text-secondary">-</td>
                                 @else
                                 <td class="text-secondary">{{date("d/M/Y", strtotime($item->jth_tempo));}}</td>
                                 @endif
-                                
+                              <td class="text-secondary">
+                                @if ($item->status == 1)
+                                <i class="fas fa-square text-danger"></i> Belum Lunas
+                                @else
+                                    Lunas
+                                @endif
+                              </td>
                                 <td>
                                     <center>
-                                        <a href="{{url('invoice/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
-                                        <a href="" title="edit" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal3{{$item->id}}">Edit</a>
+                                        <a href="{{url('kelola-utang/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
                                     </center>
                                 </td>
                             </tr>
@@ -97,11 +94,66 @@
         </div>
     </div>
 
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Utang Nonaktif/Sudah Lunas</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tabelPertama" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="text-secondary text-center">No</th>
+                                <th class="text-secondary text-center">Toko/Pihak Penghutang</th>
+                                <th class="text-secondary text-center">Tanggal Utang</th>
+                                <th class="text-secondary text-center">Nominal Utang</th>
+                                <th class="text-secondary text-center">Keterangan</th>
+                                <th class="text-secondary text-center">Tanggal Jatuh Tempo</th>
+                                <th class="text-secondary text-center">Status</th>
+                                <th class="text-secondary text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                      
+                        <tbody>
+                            @foreach ($utl as $no=>$item)
+                                <tr>
+                                    <td class="text-secondary">{{$no+1}}</td>
+                                    <td class="text-secondary">{{$item->toko}}</td>
+                                    <td class="text-secondary">{{date("d/M/Y", strtotime($item->tanggal));}}</td>
+                                    <td class="text-secondary text-right">Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</td>
+                                    <td class="text-secondary">{{$item->keterangan}}</td>
+                                    @if ($item->jth_tempo == null)
+                                    <td class="text-secondary">-</td>
+                                    @else
+                                    <td class="text-secondary">{{date("d/M/Y", strtotime($item->jth_tempo));}}</td>
+                                    @endif
+                                  <td class="text-secondary">
+                                    @if ($item->status == 1)
+                                        Belum Lunas
+                                    @else
+                                       <i class="fas fa-square text-success"></i> Lunas
+                                    @endif
+                                  </td>
+                                    <td>
+                                        <center>
+                                            <a href="{{url('kelola-utang/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
+                                        </center>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
 <!-- Modal -->
-<form action="{{url('/tambah-faktur')}}" method="POST">
+<form action="{{url('/buat-utang')}}" method="POST">
     @csrf
     @method('POST')
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -114,38 +166,29 @@
           </button>
         </div>
         <div class="modal-body">
+            
             <div class="form-group">
-                <label for="exampleFormControlSelect1">Pelanggan/Toko</label>
-                <select class="form-control" id="sl2" name="data_pelanggan_id"
-                    required>
-                    <option value="">-- Pilih Pelanggan --</option>
-                    @foreach ($dp as $dp)
-                        <option value="{{ $dp->id }}">{{ $dp->nama_pelanggan }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">No Faktur</label>
-                <input type="text" class="form-control" id="exampleInputText1" name="no_faktur"
-                    placeholder="Masukan no faktur" required>
+                <label class="form-label" for="exampleInputText1">Toko/Pihak Penghutang</label>
+                <input type="text" class="form-control" id="exampleInputText1" name="toko"
+                    placeholder="..." required>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Tanggal</label>
+                <label class="form-label" for="exampleInputText1">Tanggal Utang</label>
                 <input type="date" class="form-control" id="" name="tanggal" placeholder="..."
                     required>
             </div>
-              
+
             <div class="form-group">
-                <label for="exampleFormControlInput1">Jenis Transaksi</label><br>
-                <select class="form-select text-secondary" id="" name="jenis_tr" required>
-                  <option selected>Pilih jenis transaksi</option>
-                  <option value="Grosir 1">Grosir 1 (Umum)</option>
-                  <option value="Grosir 2">Grosir 2 (Bon)</option>
-                  <option value="Grosir 3">Grosir 3 (Tunai)</option>
-                  
-                </select>
-              </div>
+                <label class="form-label" for="exampleInputText1">Nominal Utang</label>
+                <input type="text" class="form-control" id="nominal_utang" name="nominal_utang" placeholder="..."
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="exampleInputText1">Keterangan</label>
+                <input type="text" class="form-control" id="" name="keterangan" placeholder="...">
+            </div>
 
             <div class="form-group">
                 <label class="form-label" for="exampleInputText1">Jatuh Tempo</label>
@@ -161,61 +204,7 @@
   </div>
 </form>
 
-@foreach ($f as $item)
-<form action="{{url('edit-faktur/'. $item->id)}}" method="POST">
-    @csrf
-    @method('PUT')
-<div class="modal fade" id="exampleModal3{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Tambah Data Pelanggan</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Pelanggan</label>
-                <input type="text" class="form-control" id="exampleInputText1" value="{{$item->data_pelanggan->nama_pelanggan}}"
-                    placeholder="Masukan no faktur" readonly>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">No Faktur</label>
-                <input type="text" class="form-control" id="exampleInputText1" name="no_faktur" value="{{$item->no_faktur}}"
-                    placeholder="Masukan no faktur" required>
-            </div>
 
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Tanggal</label>
-                <input type="date" class="form-control" id="" name="tanggal" value="{{$item->tanggal}}">
-            </div>
-              
-            <div class="form-group">
-                <label for="exampleFormControlInput1">Jenis Transaksi</label><br>
-                <select class="form-select text-secondary" id="" name="jenis_tr">
-                  <option value="{{$item->jenis_tr}}">{{$item->jenis_tr}}</option>
-                  <option value="Grosir 1">Grosir 1 (Umum)</option>
-                  <option value="Grosir 2">Grosir 2 (Bon)</option>
-                  <option value="Grosir 3">Grosir 3 (Tunai)</option>
-                  
-                </select>
-              </div>
-
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Jatuh Tempo</label>
-                <input type="date" class="form-control" id="" name="jth_tempo" value="{{$item->jth_tempo}}">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
-@endforeach
 
 
 
@@ -234,15 +223,15 @@
 </script>
 
 <script type="text/javascript">
-    var harga_beli = document.getElementById('harga_beli');
-    harga_beli.addEventListener('keyup', function(e)
+    var nominal_utang = document.getElementById('nominal_utang');
+    nominal_utang.addEventListener('keyup', function(e)
     {
-        harga_beli.value = formatRupiah(this.value, 'Rp. ');
+        nominal_utang.value = formatRupiah(this.value, 'Rp. ');
     });
-    var harga_jual = document.getElementById('harga_jual');
-    harga_jual.addEventListener('keyup', function(e)
+    var nominal_utang_edit = document.getElementById('nominal_utang_edit');
+    nominal_utang_edit.addEventListener('keyup', function(e)
     {
-        harga_jual.value = formatRupiah(this.value, 'Rp. ');
+        nominal_utang_edit.value = formatRupiah(this.value, 'Rp. ');
     });
   
     var harga_beli_edit = document.getElementById('harga_beli_edit');
@@ -273,6 +262,16 @@
     }
     </script>
   
+  <script>
+    $(document).ready(function() {
+    $('#tabelPertama').DataTable({
+        responsive: true,
+        paging: true
+    });
+
+
+});
+  </script>
   
 @endsection
 

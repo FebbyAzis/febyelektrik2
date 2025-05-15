@@ -37,9 +37,9 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                {{-- <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-light"></i>
-                </div> --}}
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
                 <div class="sidebar-brand-text mx-3">FEBY ELEKTRIK</div>
             </a>
 
@@ -47,8 +47,8 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item {{ request()->is('/*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('/') }}">
+            <li class="nav-item {{ request()->is('/*') ? 'active' : '' }} {{ request()->is('dashboard*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('/dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -64,7 +64,7 @@
             <li
                 class="nav-item {{ request()->is('data-barang*') ? 'active' : '' }} {{ request()->is('kategori-barang*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/data-barang') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-boxes"></i>
                     <span>Data Barang</span></a>
             </li>
             <li class="nav-item {{ request()->is('data-pelanggan*') ? 'active' : '' }} {{ request()->is('detail-pelanggan*') ? 'active' : '' }}
@@ -76,8 +76,8 @@
             <li
                 class="nav-item {{ request()->is('faktur*') ? 'active' : '' }} {{ request()->is('invoice*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/faktur') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Faktur</span></a>
+                    &nbsp;<i class="fas fa-file-alt"></i>
+                    <span>&nbsp;Faktur</span></a>
             </li>
 
             <hr class="sidebar-divider">
@@ -88,30 +88,16 @@
             </div>
 
             <li
-                class="nav-item {{ request()->is('pendapatan*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('/pendapatan') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Pendapatan</span></a>
-            </li>
-
-            <li
-                class="nav-item {{ request()->is('pengeluaran*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('/pengeluaran') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Pengeluaran</span></a>
-            </li>
-
-            <li
-                class="nav-item {{ request()->is('utang*') ? 'active' : '' }}">
+                class="nav-item {{ request()->is('utang*') ? 'active' : '' }} {{ request()->is('kelola-utang*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/utang') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-money-bill-wave"></i>
                     <span>Utang</span></a>
             </li>
 
             <li
-                class="nav-item {{ request()->is('piutang*') ? 'active' : '' }}">
+                class="nav-item {{ request()->is('piutang*') ? 'active' : '' }} {{ request()->is('kelola-piutang*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/piutang') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-money-bill-wave"></i>
                     <span>Piutang</span></a>
             </li>
             <!-- Nav Item - Pages Collapse Menu -->
@@ -249,6 +235,11 @@
     <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script> --}}
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Page level plugins -->
+    <script src="{{ asset('vendor/chart.js/Chart.min.js')}}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('js/demo/chart-bar-demo.js')}}"></script>
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>

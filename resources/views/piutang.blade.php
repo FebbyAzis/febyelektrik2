@@ -5,13 +5,10 @@
     <!-- Page Heading -->
     <div class="row">
         <div class="col-sm-9">
-            <h1 class="h3 mb-2 text-gray-800">Faktur</h1>
-    <p class="mb-4">Anda dapat membuat faktur pada halaman ini.</p>
+            <h1 class="h3 mb-2 text-gray-800">Piutang</h1>
+    <p class="mb-4">Anda dapat mengelola piutang pada halaman ini.</p>
         </div>
-        <div class="col-sm-3 mt-2 text-right">
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#exampleModal"><i
-                class="fas fa-plus fa-sm text-white-50"></i> Buat Faktur</a>
-        </div>
+        
     </div>
 
     @if (session('Success'))
@@ -42,8 +39,8 @@
     <!-- DataTales Example -->
     
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabel Data Faktur</h6>
+        <div class="card-header py-3 bg-warning">
+            <h6 class="m-0 font-weight-bold text-dark">Piutang Aktif/Belum Lunas</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -56,12 +53,13 @@
                             <th class="text-secondary text-center">Tanggal</th>
                             <th class="text-secondary text-center">Jenis Transaksi</th>
                             <th class="text-secondary text-center">Tanggal Jatuh Tempo</th>
+                            <th class="text-secondary text-center">Status</th>
                             <th class="text-secondary text-center">Aksi</th>
                         </tr>
                     </thead>
                   
                     <tbody>
-                        @foreach ($f as $no=>$item)
+                        @foreach ($pa as $no=>$item)
                             <tr>
                                 <td class="text-secondary">{{$no+1}}</td>
                                 <td class="text-secondary">{{$item->no_faktur}}</td>
@@ -82,11 +80,78 @@
                                 @else
                                 <td class="text-secondary">{{date("d/M/Y", strtotime($item->jth_tempo));}}</td>
                                 @endif
-                                
+                              <td class="text-secondary">
+                                @if ($item->status == 1)
+                                <i class="fas fa-square text-danger"></i> Belum Lunas
+                                @else
+                                    Lunas
+                                @endif
+                              </td>
                                 <td>
                                     <center>
-                                        <a href="{{url('invoice/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
-                                        <a href="" title="edit" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal3{{$item->id}}">Edit</a>
+                                        <a href="{{url('kelola-piutang/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
+                                    </center>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Piutang Nonaktif/Sudah Lunas</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tabelPertama" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="text-secondary text-center">No</th>
+                            <th class="text-secondary text-center">No Faktur</th>
+                            <th class="text-secondary text-center">Nama Pelanggan</th>
+                            <th class="text-secondary text-center">Tanggal</th>
+                            <th class="text-secondary text-center">Jenis Transaksi</th>
+                            <th class="text-secondary text-center">Tanggal Jatuh Tempo</th>
+                            <th class="text-secondary text-center">Status</th>
+                            <th class="text-secondary text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                  
+                    <tbody>
+                        @foreach ($pl as $no=>$item)
+                            <tr>
+                                <td class="text-secondary">{{$no+1}}</td>
+                                <td class="text-secondary">{{$item->no_faktur}}</td>
+                                <td class="text-secondary">{{$item->data_pelanggan->nama_pelanggan}}</td>
+                                <td class="text-secondary">{{date("d/M/Y", strtotime($item->tanggal));}}</td>
+                                @if ($item->jenis_tr == 'Grosir 1')
+                                <td class="text-secondary">Grosir 1 (Umum)</td>
+                                @elseif ($item->jenis_tr == 'Grosir 2')
+                                <td class="text-secondary">Grosir 2 (Bon)</td>
+                                @elseif ($item->jenis_tr == 'Grosir 3')
+                                <td class="text-secondary">Grosir 3 (Tunai)</td>
+                                @else
+                                <td>-</td>
+                                @endif
+
+                                @if ($item->jth_tempo == null)
+                                <td class="text-secondary">-</td>
+                                @else
+                                <td class="text-secondary">{{date("d/M/Y", strtotime($item->jth_tempo));}}</td>
+                                @endif
+                              <td class="text-secondary">
+                                @if ($item->status == 1)
+                                    Belum Lunas
+                                @else
+                                <i class="fas fa-square text-success"></i> Lunas
+                                @endif
+                              </td>
+                                <td>
+                                    <center>
+                                        <a href="{{url('kelola-piutang/'. $item->id)}}" class="btn btn-sm btn-primary">Lihat</a>
                                     </center>
                                 </td>
                             </tr>
@@ -101,7 +166,7 @@
 @endsection
 
 <!-- Modal -->
-<form action="{{url('/tambah-faktur')}}" method="POST">
+<form action="{{url('/bayar-piutang')}}" method="POST">
     @csrf
     @method('POST')
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -114,16 +179,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Pelanggan/Toko</label>
-                <select class="form-control" id="sl2" name="data_pelanggan_id"
-                    required>
-                    <option value="">-- Pilih Pelanggan --</option>
-                    @foreach ($dp as $dp)
-                        <option value="{{ $dp->id }}">{{ $dp->nama_pelanggan }}</option>
-                    @endforeach
-                </select>
-            </div>
+            
             <div class="form-group">
                 <label class="form-label" for="exampleInputText1">No Faktur</label>
                 <input type="text" class="form-control" id="exampleInputText1" name="no_faktur"
@@ -161,61 +217,7 @@
   </div>
 </form>
 
-@foreach ($f as $item)
-<form action="{{url('edit-faktur/'. $item->id)}}" method="POST">
-    @csrf
-    @method('PUT')
-<div class="modal fade" id="exampleModal3{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Tambah Data Pelanggan</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Pelanggan</label>
-                <input type="text" class="form-control" id="exampleInputText1" value="{{$item->data_pelanggan->nama_pelanggan}}"
-                    placeholder="Masukan no faktur" readonly>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">No Faktur</label>
-                <input type="text" class="form-control" id="exampleInputText1" name="no_faktur" value="{{$item->no_faktur}}"
-                    placeholder="Masukan no faktur" required>
-            </div>
 
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Tanggal</label>
-                <input type="date" class="form-control" id="" name="tanggal" value="{{$item->tanggal}}">
-            </div>
-              
-            <div class="form-group">
-                <label for="exampleFormControlInput1">Jenis Transaksi</label><br>
-                <select class="form-select text-secondary" id="" name="jenis_tr">
-                  <option value="{{$item->jenis_tr}}">{{$item->jenis_tr}}</option>
-                  <option value="Grosir 1">Grosir 1 (Umum)</option>
-                  <option value="Grosir 2">Grosir 2 (Bon)</option>
-                  <option value="Grosir 3">Grosir 3 (Tunai)</option>
-                  
-                </select>
-              </div>
-
-            <div class="form-group">
-                <label class="form-label" for="exampleInputText1">Jatuh Tempo</label>
-                <input type="date" class="form-control" id="" name="jth_tempo" value="{{$item->jth_tempo}}">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
-@endforeach
 
 
 
@@ -273,6 +275,16 @@
     }
     </script>
   
+  <script>
+    $(document).ready(function() {
+    $('#tabelPertama').DataTable({
+        responsive: true,
+        paging: true
+    });
+
+
+});
+  </script>
   
 @endsection
 
