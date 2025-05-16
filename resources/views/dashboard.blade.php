@@ -106,20 +106,19 @@
                 </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-4 col-md-8 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Total Piutang Saat Ini</div>
-                                    
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($summary_ppp_piutang ,0, ',', '.') }}</div>
+                                    Total Pemasukan Hari Ini</div>
+                            
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($totalss ,0, ',', '.') }}</div>
                             </div>
                             <div class="col-auto">
-                                
-                                    <i class="fas fa-money-bill-wave fa-2x text-success"></i>
+                               
+                                <i class="fas fa-money-bill-wave fa-2x text-success"></i>
                             </div>
                         </div>
                     </div>
@@ -132,8 +131,9 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Total Utang Saat Ini</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($summary_utang_ub ,0, ',', '.') }}</div>
+                                    Total Pemasukan Bulan Ini</div>
+                                    
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($totalsss ,0, ',', '.') }}</div>
                             </div>
                             <div class="col-auto">
                                 
@@ -143,6 +143,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
 
         <div class="row">
@@ -154,6 +156,48 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Total Piutang Saat Ini</div>
+                                    
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($summary_ppp_piutang ,0, ',', '.') }}</div>
+                            </div>
+                            <div class="col-auto">
+                                
+                                    <i class="fas fa-money-bill-wave fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-6 col-md-12 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Total Utang Saat Ini</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. {{ number_format($summary_utang_ub ,0, ',', '.') }}</div>
+                            </div>
+                            <div class="col-auto">
+                                
+                                    <i class="fas fa-money-bill-wave fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-6 col-md-12 mb-4">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                     Total Piutang Aktif/Belum Lunas</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{$p}}</div>
                             </div>
@@ -168,11 +212,11 @@
 
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-6 col-md-12 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card border-left-secondary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                     Total Utang Aktif/Belum Lunas</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{$u}}</div>
                             </div>
@@ -186,17 +230,6 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Total Penjualan Bulan </h6>
-                </div>
-                <div class="card-body">
-
-                    <canvas id="penjualanChart"></canvas>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- /.container-fluid -->
 @endsection

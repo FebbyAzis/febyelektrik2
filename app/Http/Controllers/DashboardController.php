@@ -162,8 +162,20 @@ class DashboardController extends Controller
         $invoHarian = Invoice::where('jenis_tr', 'Grosir 2')->get();
         $invoiceHarians = Invoice::whereDate('created_at', $tgl)->get();
         $invoHarians = Invoice::whereDate('created_at', $tgl)->where('jenis_tr', 'Grosir 2')->get();
+        $invoiceHariIni = Invoice::whereDate('created_at', Carbon::today())->get();
+        $invoiceHariInis = Invoice::where('jenis_tr', 'Grosir 2')->whereDate('created_at', Carbon::today())->get();
+        $n = Invoice::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
+        $nn = Invoice::where('jenis_tr', 'Grosir 2')->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
+        $m = Invoice::whereDate('created_at', Carbon::now()->day)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
+        $mm = Invoice::where('jenis_tr', 'Grosir 2')->whereDate('created_at', Carbon::now()->day)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
         $pp = 0;
         $ppp = 0;
+        $a = 0;
+        $b = 0;
+        $aa = 0;
+        $bb = 0;
+        $aaa = 0;
+        $bbb = 0;
         
         $pppp = $invoHarians->reduce(function ($carry, $item) {
             $o = $item->ongkos_toko * $item->jumlah;
@@ -195,10 +207,60 @@ class DashboardController extends Controller
             $ppp += $ya;
         }
 
+        foreach ($invoiceHariIni as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $a += $ya;
+        }
+
+        foreach ($invoiceHariInis as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $b += $ya;
+        }
+
+        foreach ($n as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $aa += $ya;
+        }
+
+        foreach ($nn as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $bb += $ya;
+        }
+
+        foreach ($m as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $aaa += $ya;
+        }
+
+        foreach ($mm as $item) {
+            $o = $item->ongkos_toko * $item->jumlah;
+            $y = $item->harga_grosir * $item->jumlah + $o;
+            $t = ($y * $item->disc) / 100;
+            $ya = $y - $t;
+            $bbb += $ya;
+        }
+
         $piutang = Piutang::sum('nominal_pembayaran');
         
         $total = $pp - ($ppp - $piutang);
-        $totals = $ppppp - ($pppp - $piutang);
+        $totals = $aaa - ($bbb - $piutang);
+        $totalss = $a - ($b - $piutang);
+        $totalsss = $aa - ($bb - $piutang);
 
         $tanggalList[] = $tgl;
         $penjualanList[] = $totals;
@@ -212,7 +274,7 @@ class DashboardController extends Controller
     return view('dashboard', compact(
         'dp', 'db', 'f', 'i', 'p', 'u', 'utang', 'ub', 'piutang',
         'tanggalList', 'penjualanList', 'summary_ppp_piutang', 'summary_utang_ub',
-        'bulan', 'tahun', 'total'
+        'bulan', 'tahun', 'total' , 'totalss' , 'totalsss'
     ));
 }
 }

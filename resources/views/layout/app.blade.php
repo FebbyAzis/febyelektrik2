@@ -130,9 +130,13 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
+                <center>
+                  <button type="button" class="btn btn-outline-light w-75" data-toggle="modal" data-target="#exampleModal1">
+                      <i class="fas fa-door-open"></i>&nbsp; Keluar
+                  </button>
+              </center>
+             
+            <div class="text-center d-none d-md-inline mt-3">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
@@ -212,6 +216,9 @@
             </div>
         </div>
     </div>
+
+
+
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-JobWAqYk5CSjWuVV3mxgS+MmccJqkrBaDhk8SKS1BW+71dJ9gzascwzW85UwGhxiSyR7Pxhu50k+Nl3+o5I49A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
@@ -272,3 +279,29 @@
 </body>
 
 </html>
+
+
+<form  action="{{ route('logout') }}" method="POST">
+    @csrf
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Hapus Pembayaran</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+    
+                <p>Apakah anda yakin ingin keluar dari website <b>FEB ELEKTRIK</b>?</p>
+    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Tidak</button>
+              <button type="submit" class="btn btn-primary">Ya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</form>
