@@ -142,6 +142,8 @@ class DashboardController extends Controller
     $utang = Utang::sum('nominal_utang');
     $ub = UtangBayar::sum('nominal_pembayaran');
     $piutang = Piutang::sum('nominal_pembayaran');
+    $piutangnow = Piutang::whereDate('created_at', Carbon::today())->sum('nominal_pembayaran');
+    $piutangmonth = Piutang::whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('nominal_pembayaran');
     $bulan = $request->input('bulan', now()->month);
     $tahun = $request->input('tahun', now()->year);
 
@@ -211,8 +213,8 @@ class DashboardController extends Controller
             $o = $item->ongkos_toko * $item->jumlah;
             $y = $item->harga_grosir * $item->jumlah + $o;
             $t = ($y * $item->disc) / 100;
-            $ya = $y - $t;
-            $a += $ya;
+            $yaa = $y - $t;
+            $a += $yaa;
         }
 
         foreach ($invoiceHariInis as $item) {
@@ -259,8 +261,8 @@ class DashboardController extends Controller
         
         $total = $pp - ($ppp - $piutang);
         $totals = $aaa - ($bbb - $piutang);
-        $totalss = $a - ($b - $piutang);
-        $totalsss = $aa - ($bb - $piutang);
+        $totalss = $a - ($b - $piutangnow);
+        $totalsss = $aa - ($bb - $piutangmonth);
 
         $tanggalList[] = $tgl;
         $penjualanList[] = $totals;
@@ -269,12 +271,13 @@ class DashboardController extends Controller
         $summary_utang_ub = $utang - $ub;
     }
 
+    
   
 
     return view('dashboard', compact(
         'dp', 'db', 'f', 'i', 'p', 'u', 'utang', 'ub', 'piutang',
         'tanggalList', 'penjualanList', 'summary_ppp_piutang', 'summary_utang_ub',
-        'bulan', 'tahun', 'total' , 'totalss' , 'totalsss'
+        'bulan', 'tahun', 'total' , 'totalss' , 'totalsss', 'piutangnow', 'piutangmonth'
     ));
 }
 }

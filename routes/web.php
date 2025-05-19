@@ -59,6 +59,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/pembayaran-utang', [UtangPiutangController::class, 'pembayaran_utang']);
     Route::delete('/hapus-pembayaran-utang/{id}', [UtangPiutangController::class, 'hapus_utang_bayar']);
     Route::put('/lunas-utang/{id}', [UtangPiutangController::class, 'lunas_utang']);
+    Route::get('/faktur-pelanggan/{id}', [DataPelangganController::class, 'faktur_pelanggan']);
+    Route::get('/invoice-pelanggan/{id}', [DataPelangganController::class, 'invoice_pelanggan']);
+    Route::get('/cetak-invoice-pelanggan/{id}', [DataPelangganController::class, 'cetak_invoice_pelanggan']);
     Auth::routes();
     
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

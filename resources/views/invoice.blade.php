@@ -177,7 +177,11 @@
                                             Rp. {{ number_format($t, 0, ',', '.') }}
                                         @endif
                                     </td>
+                                    @if ($p->ongkos_toko == null)
+                                        <td>-</td>
+                                    @else
                                     <td class="text-right">Rp. {{ number_format($o, 0, ',', '.') }}</td>
+                                    @endif
         
                                     <td class="text-right">Rp. {{ number_format($ya, 0, ',', '.') }}</td>
         

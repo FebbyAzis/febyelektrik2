@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DataPelanggan;
 use App\Models\Invoice;
+use App\Models\Faktur;
 
 class DataPelangganController extends Controller
 {
@@ -45,5 +46,30 @@ class DataPelangganController extends Controller
         return redirect()->back()->with('Successss', 'Data berhasil dihapus!');
     }
 
+    public function faktur_pelanggan($id)
+    {
+        $p = DataPelanggan::find($id);
+        $fp = Faktur::where('data_pelanggan_id', $id)->orderBy('id', 'desc')->get();
+
+        return view('faktur_pelanggan', compact('p', 'fp'));
+    }
+
+    public function invoice_pelanggan($id)
+    {
+        $faktur = Faktur::find($id);
+        $inv = Invoice::where('faktur_id', $id)->orderBy('id', 'desc')->get();
+        $pp = 0;
+
+        return view('invoice_pelanggan', compact('faktur', 'inv', 'pp'));
+    }
+
+    public function cetak_invoice_pelanggan($id)
+    {
+        $faktur = Faktur::find($id);
+        $inv = Invoice::where('faktur_id', $id)->orderBy('id', 'desc')->get();
+        $pp = 0;
+
+        return view('cetak_invoice_pelanggan', compact('faktur', 'inv', 'pp'));
+    }
     
 }

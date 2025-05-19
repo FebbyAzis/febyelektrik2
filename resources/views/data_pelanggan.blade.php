@@ -69,8 +69,8 @@
                              
                                 <td>
                                     <center>
-                                        <a href="" data-toggle="modal" data-target="#exampleModal1{{$item->id}}"><i class="fas fa-edit text-primary" title="edit"></i></a>&nbsp;
-                                        <a href="" data-toggle="modal" data-target="#exampleModal2{{$item->id}}"><i class="fas fa-trash text-danger" title="hapus"></i></a>
+                                        <a href="" data-toggle="modal" data-target="#exampleModal1{{$item->id}}" class="btn btn-primary"><i class="fas fa-edit text-light" title="edit"></i>&nbsp;Edit</a>
+                                        <a href="{{url('faktur-pelanggan/'. $item->id)}}" class="btn btn-info"><i class="fas fa-eye text-light" title="Lihat"></i>&nbsp;Lihat</a>
                                     </center>
                                 </td>
                             </tr>
